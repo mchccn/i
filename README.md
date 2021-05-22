@@ -45,7 +45,7 @@ yarn add @cursorsdottsx/i
 Import the utility class:
 
 ```js
-const IPv4 = require("@cursorsdottsx/i");
+const IPv4 = require("@cursorsdottsx/i").default;
 ```
 
 A class named `IPv4` will be added.
