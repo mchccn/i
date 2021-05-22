@@ -45,15 +45,15 @@ yarn add @cursorsdottsx/i
 Import the utility class:
 
 ```js
-require("@cursorsdottsx/i");
+const IPv4 = require("@cursorsdottsx/i");
 ```
 
-A global class named `IPv4` will be added.
+A class named `IPv4` will be added.
 
 `new IPv4(address, subnet)`
 
-- `address` – IP address
-- `subnet` – Subnet mask
+-   `address` – IP address
+-   `subnet` – Subnet mask
 
 Creates a new IPv4 address.
 
