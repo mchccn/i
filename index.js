@@ -1,95 +1,95 @@
-(function () {
-	globalThis.IPv4 = class IPv4 {
-		#address;
-		#subnet;
+(function() {
+    globalThis.IPv4 = class IPv4 {
+        #address;
+        #subnet;
 
-		static classAMin = new IPv4("0.0.0.0", 8);
-		static classAMax = new IPv4("127.255.255.255", 8);
-		static classBMin = new IPv4("128.0.0.0", 16);
-		static classBMax = new IPv4("191.255.255.255", 16);
-		static classCMin = new IPv4("192.0.0.0", 24);
-		static classCMax = new IPv4("223.255.255.255", 24);
-		static classDMin = new IPv4("224.0.0.0", 0);
-		static classDMax = new IPv4("239.255.255.255", 0);
-		static classEMin = new IPv4("240.0.0.0", 0);
-		static classEMax = new IPv4("255.255.255.254", 0);
+        static classAMin = new IPv4("0.0.0.0", 8);
+        static classAMax = new IPv4("127.255.255.255", 8);
+        static classBMin = new IPv4("128.0.0.0", 16);
+        static classBMax = new IPv4("191.255.255.255", 16);
+        static classCMin = new IPv4("192.0.0.0", 24);
+        static classCMax = new IPv4("223.255.255.255", 24);
+        static classDMin = new IPv4("224.0.0.0", 0);
+        static classDMax = new IPv4("239.255.255.255", 0);
+        static classEMin = new IPv4("240.0.0.0", 0);
+        static classEMax = new IPv4("255.255.255.254", 0);
 
-		constructor (address, subnet) {
-			if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
+        constructor(address, subnet) {
+            if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
 
-			this.#address = address;
-			this.#subnet = typeof subnet === "number" ? subnet : (
-				this.toDecimal() < IPv4.classAMax.toDecimal()
-					? 8 
-					: this.toDecimal() < IPv4.classBMax.toDecimal()
-					? 16
-					: this.toDecimal() < IPv4.classBMax.toDecimal()
-					? 24
-					: undefined
-			);
-		}
+            this.#address = address;
+            this.#subnet = typeof subnet === "number" ? subnet : (
+                this.toDecimal() < IPv4.classAMax.toDecimal() ?
+                8 :
+                this.toDecimal() < IPv4.classBMax.toDecimal() ?
+                16 :
+                this.toDecimal() < IPv4.classBMax.toDecimal() ?
+                24 :
+                undefined
+            );
+        }
 
-		get address() {
-			return this.#address;
-		}
+        get address() {
+            return this.#address;
+        }
 
-		set address(address) {
-			if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
+        set address(address) {
+            if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
 
-			return void (this.#address = address);
-		}
+            return void(this.#address = address);
+        }
 
-		get subnet() {
-			return this.#subnet;
-		}
+        get subnet() {
+            return this.#subnet;
+        }
 
-		set subnet(subnet) {
-			if (subnet < 0 || subnet > 32 || !Number.isInteger(subnet)) throw new Error("Invalid IP subnet prefix length.");
+        set subnet(subnet) {
+            if (subnet < 0 || subnet > 32 || !Number.isInteger(subnet)) throw new Error("Invalid IP subnet prefix length.");
 
-			return void (this.#subnet = subnet);
-		}
+            return void(this.#subnet = subnet);
+        }
 
-		toBinary() {
-			return this.address.split(".").map((o) => parseInt(o).toString(2).padStart(8, "0")).join(".");
-		}
+        toBinary() {
+            return this.address.split(".").map((o) => parseInt(o).toString(2).padStart(8, "0")).join(".");
+        }
 
-		toDecimal() {
-			return parseInt(this.toBinary().replace(/\./g, ""), 2);
-		}
+        toDecimal() {
+            return parseInt(this.toBinary().replace(/\./g, ""), 2);
+        }
 
-		static isValid(ip) {
-			if (typeof ip !== "string") return false;
+        static isValid(ip) {
+            if (typeof ip !== "string") return false;
 
-			const octets = ip.split(".");
+            const octets = ip.split(".");
 
-			if (octets.length !== 4) return false;
+            if (octets.length !== 4) return false;
 
-			return octets.every((o) => /^\d+$/.test(o) && parseInt(o) >= 0 && parseInt(o) <= 255);
-		}
+            return octets.every((o) => /^\d+$/.test(o) && parseInt(o) >= 0 && parseInt(o) <= 255);
+        }
 
-		static isPrivate(address) {
-			if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
+        static isPrivate(address) {
+            if (!IPv4.isValid(address)) throw new Error("Invalid IP address.");
 
-			const parts = address.split(".");
+            const parts = address.split(".");
 
-			return parts[0] === "10" ||
-				(parts[0] === "172" && (parseInt(parts[1], 10) >= 16 && parseInt(parts[1], 10) <= 31)) || 
-				(parts[0] === "192" && parts[1] === "168");
-		}
+            return parts[0] === "10" ||
+                (parts[0] === "172" && (parseInt(parts[1], 10) >= 16 && parseInt(parts[1], 10) <= 31)) ||
+                (parts[0] === "192" && parts[1] === "168");
+        }
 
-		static not(address) {
-			if (!IPv4.isValid(address) && (!address instanceof IPv4)) throw new Error("Invalid IP address.");
+        static not(address) {
+            if (!IPv4.isValid(address) && (!address instanceof IPv4)) throw new Error("Invalid IP address.");
 
-			return (address instanceof IPv4 ? address.address : address).split(".").map((o) => Math.abs(parseInt(o) - 255)).join(".");
-		}
+            return (address instanceof IPv4 ? address.address : address).split(".").map((o) => Math.abs(parseInt(o) - 255)).join(".");
+        }
 
-		static or(a, b) {
-			if (!IPv4.isValid(a)) throw new Error("Invalid IP address.");
-			if (!IPv4.isValid(b)) throw new Error("Invalid IP address.");
-			
-			const temp = b.split(".");
+        static or(a, b) {
+            if (!IPv4.isValid(a)) throw new Error("Invalid IP address.");
+            if (!IPv4.isValid(b)) throw new Error("Invalid IP address.");
 
-			return a.split(".").map((o, i) => o | temp[i]).join(".")
-		}
-	}
+            const temp = b.split(".");
+
+            return a.split(".").map((o, i) => o | temp[i]).join(".")
+        }
+    }
 })();
