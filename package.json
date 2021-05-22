@@ -1,6 +1,6 @@
 {
   "name": "@cursorsdottsx/i",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A few IP address utilities (only v4).",
   "main": "index.js",
   "scripts": {
